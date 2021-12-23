@@ -28,6 +28,22 @@ template <typename T>
 using RemoveReference_t = typename RemoveReference<T>::type;
 
 
+//dodavanje lijeve reference
+template<typename T>
+struct AddLValueReference: TypeIdentity<T&> {};
+
+template<typename T>
+struct AddLValueReference<T&>: TypeIdentity<T&> {};
+
+template<typename T>
+struct AddLValueReference<T&&>: TypeIdentity<T&> {};
+
+template<>
+struct AddLValueReference<void>: TypeIdentity<void> {};
+
+template<typename T>
+using AddLValueReference_t = typename AddLValueReference<T>::type;
+
 
 
 
@@ -53,13 +69,13 @@ int main(){
     static_assert(std::is_same_v<RemoveReference_t<int &>, int>);
     static_assert(std::is_same_v<RemoveReference_t<int &&>, int>);
     static_assert(std::is_same_v<RemoveReference_t<int const &>, int const>);
-    /*
+    
     // 2.
     static_assert(std::is_same_v<AddLValueReference_t<int>, int&>);
     static_assert(std::is_same_v<AddLValueReference_t<int&>, int&>);
     static_assert(std::is_same_v<AddLValueReference_t<int&&>, int&>);
     static_assert(std::is_same_v<AddLValueReference_t<void>, void>);
-
+    /*
     // 3. 
     static_assert(IsArray_v<int> == false);
     static_assert(IsArray_v<int[]> == true);
