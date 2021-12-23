@@ -45,6 +45,30 @@ template<typename T>
 using AddLValueReference_t = typename AddLValueReference<T>::type;
 
 
+///provjera jeli niz
+template<typename T >
+struct IsArray : std::false_type{};
+
+template<typename T>
+struct IsArray<T[]> : std::true_type{};
+
+template<typename T, std::size_t N>
+struct IsArray<T[N]> : std::true_type{};
+
+template<typename T>
+inline constexpr bool IsArray_v = IsArray<T>::value;
+
+
+//operator zbrajanja
+template <typename T, typename S, std::size_t N>
+auto operator +(const std::array<T, N>& a,  const std::array<S, N>& b)
+{ 
+   std::array<decltype(std::declval<T&>() + std::declval<S&>()), N> res;
+   for (int i = 0; i < N; ++i){
+      res[i] = a[i] +b[i];
+    }
+   return res;
+}
 
 
 class B {};
@@ -75,12 +99,12 @@ int main(){
     static_assert(std::is_same_v<AddLValueReference_t<int&>, int&>);
     static_assert(std::is_same_v<AddLValueReference_t<int&&>, int&>);
     static_assert(std::is_same_v<AddLValueReference_t<void>, void>);
-    /*
+    
     // 3. 
     static_assert(IsArray_v<int> == false);
     static_assert(IsArray_v<int[]> == true);
     static_assert(IsArray_v<int[3]> == true);
-
+    
     // 4. Operator zbrajanja
     std::array<int,3> a{1,2,3};
     std::array<float,3> b{1.0f, 2.0f, 3.0f};
@@ -89,7 +113,7 @@ int main(){
     assert(c[1] == 4);
     assert(c[2] == 6);
     static_assert(std::is_same_v<std::decay_t<decltype(c[0])>, float>); 
-    
+    /*
     // 5. IsBaseOf
     static_assert( IsBaseOf<B,D>::value );
     static_assert( !IsBaseOf<B,C>::value );
