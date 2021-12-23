@@ -1,10 +1,35 @@
-#include <fmt/format.h>
+//#include <fmt/format.h>
 #include <type_traits>
 #include <array>
 #include <cassert>
 #include <cstdint> // za (u)intptr_t
 
 // Vaš kod dolazi ovdje.
+
+template <typename T>
+struct TypeIdentity{
+    using type = T;
+};
+///za uklanjanje reference
+template <typename T>
+using TypeIdentity_t = typename TypeIdentity<T>::type;
+
+
+template< typename T > 
+struct RemoveReference : TypeIdentity<T> { };
+
+template< typename T > 
+struct RemoveReference<T&>   : TypeIdentity<T> { };
+
+template< typename T > 
+struct RemoveReference<T&&>  : TypeIdentity<T> { };
+
+template <typename T>
+using RemoveReference_t = typename RemoveReference<T>::type;
+
+
+
+
 
 class B {};
 class D : public B {};
@@ -28,7 +53,7 @@ int main(){
     static_assert(std::is_same_v<RemoveReference_t<int &>, int>);
     static_assert(std::is_same_v<RemoveReference_t<int &&>, int>);
     static_assert(std::is_same_v<RemoveReference_t<int const &>, int const>);
-
+    /*
     // 2.
     static_assert(std::is_same_v<AddLValueReference_t<int>, int&>);
     static_assert(std::is_same_v<AddLValueReference_t<int&>, int&>);
@@ -108,5 +133,5 @@ int main(){
     double * dptr1 = safe_cast<double *>(uintptr);
     fmt::print("dptr1   = {}\n", static_cast<void*>(dptr1));
 
-    return 0;
+    return 0;*/
 }
