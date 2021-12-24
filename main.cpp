@@ -70,7 +70,7 @@ auto operator +(const std::array<T, N>& a,  const std::array<S, N>& b)
    return res;
 }
 
-
+//za baze
 class B {};
 class D : public B {};
 class C{};
@@ -86,7 +86,21 @@ class Base{
 class Derived : public Base {};
 
 
+template <typename B>
+std::true_type convert(const volatile B*);//u baznu klasu
 
+template <typename>
+std::false_type convert(const volatile void*); //u void
+
+template <typename B, typename D>
+auto test_if_base() -> decltype(convert<B>(static_cast<D*>(nullptr)));
+
+template <typename Base,typename Derived>
+struct IsBaseOf{
+    constexpr static bool value = std::is_class<Base>::value && 
+                                  std::is_class<Derived>::value  &&
+                                  decltype(test_if_base<Base,Derived>())::value;
+              };
 
 int main(){
     // 1. 
@@ -113,7 +127,7 @@ int main(){
     assert(c[1] == 4);
     assert(c[2] == 6);
     static_assert(std::is_same_v<std::decay_t<decltype(c[0])>, float>); 
-    /*
+    
     // 5. IsBaseOf
     static_assert( IsBaseOf<B,D>::value );
     static_assert( !IsBaseOf<B,C>::value );
@@ -129,7 +143,7 @@ int main(){
     static_assert( IsBaseOf<C,E>::value );
 
     // 6. safe_cast().
-
+    /*
     auto x1 = safe_cast<int>(42.0f);  // float -> int 
     assert(x1 == 42);
     fmt::print("x1 = {}\n", x1);
