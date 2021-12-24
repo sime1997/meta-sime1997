@@ -102,6 +102,14 @@ struct IsBaseOf{
                                   decltype(test_if_base<Base,Derived>())::value;
               };
 
+//safe cast
+template <typename T,typename S>
+auto safe_cast(S s)//najjednostavniji
+ {   
+     return (T)s;
+ }
+
+
 int main(){
     // 1. 
     static_assert(std::is_same_v<RemoveReference_t<int &>, int>);
@@ -143,7 +151,7 @@ int main(){
     static_assert( IsBaseOf<C,E>::value );
 
     // 6. safe_cast().
-    /*
+    
     auto x1 = safe_cast<int>(42.0f);  // float -> int 
     assert(x1 == 42);
     fmt::print("x1 = {}\n", x1);
@@ -187,5 +195,5 @@ int main(){
     double * dptr1 = safe_cast<double *>(uintptr);
     fmt::print("dptr1   = {}\n", static_cast<void*>(dptr1));
 
-    return 0;*/
+    return 0;
 }
