@@ -1,4 +1,4 @@
-//#include <fmt/format.h>
+#include <fmt/format.h>
 #include <type_traits>
 #include <array>
 #include <cassert>
@@ -33,10 +33,10 @@ template<typename T>
 struct AddLValueReference: TypeIdentity<T&> {};
 
 template<typename T>
-struct AddLValueReference<T&>: TypeIdentity<T&> {};
+struct AddLValueReference<T&>: TypeIdentity<T&> {}; // NEMA POTREBE ZA TIM ZBOG PRAVILA O KOLAPSU REFERENCI
 
 template<typename T>
-struct AddLValueReference<T&&>: TypeIdentity<T&> {};
+struct AddLValueReference<T&&>: TypeIdentity<T&> {}; // NEMA POTREBE ZA TIM ZBOG PRAVILA O KOLAPSU REFERENCI
 
 template<>
 struct AddLValueReference<void>: TypeIdentity<void> {};

@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 project(meta)
-#find_package(fmt)
+find_package(fmt)
 add_executable(meta main.cpp)
-#target_link_libraries(meta fmt::fmt-header-only)
+target_link_libraries(meta fmt::fmt-header-only)
 set_target_properties(
     meta
     PROPERTIES
